@@ -1,17 +1,38 @@
 #code to estimate initial homophily coefficients from ego network data
+#Inputs are: 
+#formula=formula used to run logistic regression, in the same form as ergm formulas
+#possible terms are: 
+#nodematch, nodemix, absdiff, nodefactor, nodecov
+
 #data=input ego network data
+
 #var.name.degree=name of variable in data that has the degree of the respondents
+
 #var.name.characs= vector of names of characterisictics for ego
+
 #var.name.characs.alter=list of variable names for alter characteristics, same order as var.name.charac
-#case.control.type=type of null hypothesis, one of:
-#"case.case.matching", "weighted.random.matching","simulated.data","one_one_matching","one_one_pair_matching"
+
+#case.control.type=type of null hypothesis used to construct the control portion
+#of the data frame (the 0s in the regression), one of:
+#"case.case.matching", "weighted.random.matching","one_one_matching","one_one_pair_matching"
+#"weighted.random.matching" if you want to randomly pair respondents together based on prob. weights
+#"case.case.matching" if want to simply match all respondents with all other respondents in case part of dataset
+#"one_one_matching" if you want to match each case with only one other case for the control part of the dataset
+#"one_one_pair_matching" if only want each respondent in one pair so in control part once-either
+#as sender or reciever but not both
+
 #max.control.data.N=max size used when constructing baseline random comparison
 #in case control model. 
+
 #max.alter=max number of alters the respondents were allowed to name
+
 #control.type=either "none" or "differential.degree", if "differential.degree" then control part
 #is constructed by selecting people proportionally to degree
+
 #remove.isolates.control=should isolates be removed from control part of dataset? T/F
+
 #weight.var.name=name of variable specifying vector of weights to create representative population  (or NULL)
+
 #weight.var.name.control=name of variable for weights of respondents (if not NULL)
 #determines the probability of selection for the control part of the dataset
 #if NULL, default is to use weight.var.name 
@@ -26,22 +47,31 @@
 #if case.control.type="one_one_pair_matching" then will get you nested cases
 #two observatoins per respondent, for half the sample
 #
-
 #num.iterations=number of differnet times should reconstruct control portion and restimate model
 #note here we are not taking bootstrap sampling, just capturing stochastic variation in the 
 #construction of the control portion
 
 #bootstrap.sample=T/F, should run model multiple times using different samples each time? 
+
 #num.bootstrap.samples=if bootstrap.sample=T then how many bootstrap samples to take?
+
 #useparallel=T/F should employ multiple CPUs when running analyses?
+
 #num.cores=if useparallel=T, then how many cores to utilize?
+
 #maxit=number of maximum iterations to use in bigglm function
+
 #nodemix.reference=vector specifying the reference category if using nodemix terms
+
 #tie.data=data frame indicating which alters should be considered as present in the analysis
 #if NULL, then all in data frame assumed to be in analysis
+
 #adjust.intercept=T/F should attempt to adjust intercept to map onto known, actual size of full population?
+
 #true.pop.size=size of population from which sample is drawn; only neccessary if adjust.intercept=T
+
 #output_case_control_data=T/F should output data used to run case control regression
+
 
 egonet_case_control_model=function(formula,ego_data,var.name.degree,var.name.characs,
 var.name.characs.alter,
@@ -468,7 +498,7 @@ registerDoParallel(cl)
 vals.temp=1:num.iterations
 
 temp_dat <- foreach(p = vals.temp, .export=c('case.control.data.create.vars',
-'case.control.data.function')) %dopar% {
+'case.control.data.function', 'rep.func','rep.func2')) %dopar% {
 
 library(biglm)
 
@@ -595,7 +625,7 @@ registerDoParallel(cl)
 vals.temp=1:num.bootstrap.samples
 
 temp_dat <- foreach(x = vals.temp, .export=c('case.control.data.create.vars',
-'case.control.data.function')) %dopar% {
+'case.control.data.function','rep.func','rep.func2')) %dopar% {
 
 library(biglm)
 
@@ -1164,7 +1194,7 @@ registerDoParallel(cl)
 vals.temp=1:num.iterations
 
 temp_dat <- foreach(p = vals.temp, .export=c('case.control.data.create.vars',
-'case.control.data.function','output_glm_formula')) %dopar% {
+'case.control.data.function','output_glm_formula','rep.func', 'rep.func2')) %dopar% {
 
 library(biglm)
 
@@ -1370,7 +1400,7 @@ registerDoParallel(cl)
 vals.temp=1:num.bootstrap.samples
 
 temp_dat <- foreach(x = vals.temp, .export=c('case.control.data.create.vars',
-'case.control.data.function','output_glm_formula')) %dopar% {
+'case.control.data.function','output_glm_formula','rep.func','rep.func2')) %dopar% {
 
 library(biglm)
 
