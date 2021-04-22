@@ -46,7 +46,7 @@
 #split sample if you want only half of cases to be present in case control dataset
 #if case.control.type="one_one_pair_matching" then will get you nested cases
 #two observatoins per respondent, for half the sample
-#
+
 #num.iterations=number of differnet times should reconstruct control portion and restimate model
 #note here we are not taking bootstrap sampling, just capturing stochastic variation in the 
 #construction of the control portion
@@ -76,7 +76,7 @@
 egonet_case_control_model=function(formula,ego_data,var.name.degree,var.name.characs,
 var.name.characs.alter,
 case.control.type="weighted.random.matching", max.alter=NULL,
-max.control.data.N=100000, control.type=NULL, remove.isolates.control=T,
+max.control.data.N=100000, control.type="none", remove.isolates.control=T,
 weight.var.name=NULL, weight.var.name.control=NULL, 
 N.type="dyads", case.type="none",
 num.iterations=10, bootstrap.sample=F, num.bootstrap.samples=NULL,
