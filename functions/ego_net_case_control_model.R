@@ -105,10 +105,10 @@ resp.control.weights=NULL
 
 #getting number of dyads to use when constructing case-control data frame
 #set as max.control.data.N unless this number is more than total number of pairs
-#possible from ego network input data
+#possible from ego network input data?
+
 if (N.type=="dyads" & !is.null(max.control.data.N)){
 num.dyads=nrow(ego_data)*(nrow(ego_data)-1)/2
-
 if (num.dyads<max.control.data.N){max.control.data.N=num.dyads}
 }
 

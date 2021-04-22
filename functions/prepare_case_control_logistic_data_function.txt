@@ -104,8 +104,8 @@ hom.data=switch(paste(remove.isolates.control),"TRUE"=data[data[,var.name.degree
 tie.data=tie.data[data[,var.name.degree]>0 &!is.na(data[,var.name.degree]),]
 #"FALSE"=tie.data[!is.na(data[,var.name.degree]),])
 
-#N=nrow(hom.data)
-N=nrow(tie.data)
+N=nrow(hom.data)
+#N=nrow(tie.data)
 
 
 tie.data.orig=tie.data
@@ -151,7 +151,8 @@ control.data$y=0
 deg=hom.data[,var.name.degree][person1.id]
 control.data[,"degree"]=deg
 
-if (!is.null(max.control.data.N) &max.control.data.N<nrow(control.data)){
+if (!is.null(max.control.data.N)){
+ if ( max.control.data.N<nrow(control.data)) {
 id.temp=sample(1:nrow(control.data),size=max.control.data.N,replace=F)
   control.data=control.data[id.temp,]
 person1.id=person1.id[id.temp]
@@ -159,7 +160,7 @@ person2.id=person2.id[id.temp]
 
   }
 
-if (!is.null(max.control.data.N) &max.control.data.N>nrow(control.data)){
+if (max.control.data.N>nrow(control.data)){
 #building up dataset to be size max.control.data.N 
 
 id.temp=sample(1:nrow(control.data),size=max.control.data.N-nrow(control.data),replace=T)
@@ -167,10 +168,10 @@ id.temp=sample(1:nrow(control.data),size=max.control.data.N-nrow(control.data),r
 person1.id=c(person1.id,person1.id[id.temp])
 person2.id=c(person2.id,person2.id[id.temp])
 
+   }
   }
 
-
- }
+ } #case.case
 
 
 
